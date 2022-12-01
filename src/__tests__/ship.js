@@ -17,12 +17,6 @@ describe('getCoords()', () => {
   });
 });
 
-describe('getDamage()', () => {
-  it('returns damage array', () => {
-    expect(damage).toEqual([]);
-  });
-});
-
 describe('hit()', () => {
   it('hits ship at target', () => {
     testShip.hit('A1');
