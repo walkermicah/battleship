@@ -10,6 +10,13 @@ beforeEach(() => {
   damage = testShip.getDamage();
 });
 
+describe('getCoords()', () => {
+  it('returns ship coordinates', () => {
+    const coords = testShip.getCoords();
+    expect(coords).toEqual(testCoords);
+  });
+});
+
 describe('getDamage()', () => {
   it('returns damage array', () => {
     expect(damage).toEqual([]);
