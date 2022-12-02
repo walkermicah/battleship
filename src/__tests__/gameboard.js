@@ -1,67 +1,46 @@
 import { gameboard } from '../factories/gameboard.js';
 
-const testCoords = ['A1', 'A2', 'A3'];
 let testGameboard;
 let testShip;
+let board;
+const testCoords = [50, 51, 52, 53];
 
 beforeEach(() => {
   testGameboard = gameboard();
-  testShip = testGameboard.placeShip(testCoords);
+  board = testGameboard.board;
+  testShip = testGameboard.addShipToBoard('battleship', testCoords);
 });
 
-describe('placeShip()', () => {
+describe('addShipToBoard()', () => {
+  it('creates a ship of the type provided', () => {
+    expect(testShip).toHaveProperty('type', 'battleship');
+  });
+
   it('places ship at the coordinates provided', () => {
-    const testShipCoords = testShip.getCoords();
-    expect(testShipCoords).toEqual(testCoords);
+    testCoords.forEach((coord) => {
+      expect(board[coord]).toBeTruthy();
+    });
   });
 
   it('adds ship to fleet', () => {
-    const fleet = testGameboard.getFleet();
-    expect(fleet[0]).toEqual(testShip);
-  });
-
-  it('throws an error if there is already a ship at that location', () => {
-    const testFn = () => testGameboard.placeShip(['A1', 'A2']);
-    expect(testFn).toThrow(/Already a ship at that location/);
-  });
-
-  it('does not throw an error if there is no ship at that location', () => {
-    const testFn2 = () => testGameboard.placeShip(['A8', 'A9']);
-    expect(testFn2).not.toThrow();
+    const fleet = testGameboard.fleet;
+    expect(...fleet).toHaveProperty('type', 'battleship');
   });
 });
 
 describe('receiveAttack()', () => {
-  it('hits ship if placed at target', () => {
-    const testTarget = 'A1';
-    testGameboard.receiveAttack(testTarget);
-    const damage = testShip.getDamage();
-    const expectedDamage = [testTarget];
-    expect(damage).toEqual(expectedDamage);
+  it('hits ship if positioned at target location', () => {
+    const target = 50;
+    testGameboard.receiveAttack(target);
+    expect(testShip.getHits()).toBe(1);
+    expect(board[target]).not.toBe('miss');
   });
 
-  it('does not hit ship if no ship at target', () => {
-    const testTarget = 'B1';
-    testGameboard.receiveAttack(testTarget);
-    const damage = testShip.getDamage();
-    const expectedDamage = [];
-    expect(damage).toEqual(expectedDamage);
-  });
-
-  it('records missed shot if no ship at target', () => {
-    const testTarget = 'B1';
-    testGameboard.receiveAttack(testTarget);
-    const missedShots = testGameboard.getMissedShots();
-    const expectedMissedShots = [testTarget];
-    expect(missedShots).toEqual(expectedMissedShots);
-  });
-
-  it('does not record a missed shot if a ship was hit', () => {
-    const testTarget = 'A1';
-    testGameboard.receiveAttack(testTarget);
-    const missedShots = testGameboard.getMissedShots();
-    const expectedMissedShots = [];
-    expect(missedShots).toEqual(expectedMissedShots);
+  it('marks a missed shot if no ships at target', () => {
+    const target = 60;
+    testGameboard.receiveAttack(target);
+    expect(board[target]).toBe('miss');
+    expect(testShip.getHits()).toBe(0);
   });
 });
 
@@ -69,23 +48,24 @@ describe('allShipsSunk', () => {
   let testShip2;
 
   beforeEach(() => {
-    testShip2 = testGameboard.placeShip(['B1', 'B2']);
+    testShip2 = testGameboard.addShipToBoard('destroyer', [30, 31]);
   });
 
   it('returns true if all ships in fleet are sunk', () => {
-    testGameboard.receiveAttack('A1');
-    testGameboard.receiveAttack('A2');
-    testGameboard.receiveAttack('A3');
-    testGameboard.receiveAttack('B1');
-    testGameboard.receiveAttack('B2');
+    testGameboard.receiveAttack(50);
+    testGameboard.receiveAttack(51);
+    testGameboard.receiveAttack(52);
+    testGameboard.receiveAttack(53);
+    testGameboard.receiveAttack(30);
+    testGameboard.receiveAttack(31);
 
-    expect(testGameboard.allShipsSunk()).toBe(true);
+    expect(testGameboard.allSunk()).toBe(true);
   });
 
   it('returns false if not all ships are sunk', () => {
-    testGameboard.receiveAttack('B1');
-    testGameboard.receiveAttack('B2');
+    testGameboard.receiveAttack(30);
+    testGameboard.receiveAttack(31);
 
-    expect(testGameboard.allShipsSunk()).toBe(false);
+    expect(testGameboard.allSunk()).toBe(false);
   });
 });

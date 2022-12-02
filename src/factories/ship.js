@@ -1,20 +1,25 @@
-const ship = (coords) => {
-  const length = coords.length;
-  const damage = [];
+const ship = (type) => {
+  const shipLengths = [
+    ['carrier', 5],
+    ['battleship', 4],
+    ['cruiser', 3],
+    ['submarine', 3],
+    ['destroyer', 2],
+  ];
 
-  const getCoords = () => coords;
+  const getLength = () => shipLengths.find((ship) => ship[0] === type)[1];
 
-  const getDamage = () => damage;
+  let hits = 0;
 
-  const hit = (coord) => {
-    if (coords.includes(coord) && !damage.includes(coord)) damage.push(coord);
-  };
+  const getHits = () => hits;
 
-  const isSunk = () => damage.length === length;
+  const hit = () => hits++;
+
+  const isSunk = () => hits === getLength();
 
   return {
-    getCoords,
-    getDamage,
+    type,
+    getHits,
     hit,
     isSunk,
   };

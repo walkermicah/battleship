@@ -1,50 +1,29 @@
 import { ship } from '../factories/ship';
 
-const testCoords = ['A1', 'A2', 'A3'];
-
 let testShip;
-let damage;
 
 beforeEach(() => {
-  testShip = ship(testCoords);
-  damage = testShip.getDamage();
-});
-
-describe('getCoords()', () => {
-  it('returns ship coordinates', () => {
-    const coords = testShip.getCoords();
-    expect(coords).toEqual(testCoords);
-  });
+  testShip = ship('battleship');
 });
 
 describe('hit()', () => {
-  it('hits ship at target', () => {
-    testShip.hit('A1');
-    expect(damage).toEqual(['A1']);
-  });
-
-  it('does not hit if target has already been hit', () => {
-    testShip.hit('A1');
-    testShip.hit('A1');
-    expect(damage).toEqual(['A1']);
-  });
-
-  it('does not hit if ship is not at target', () => {
-    testShip.hit('A4');
-    expect(damage).toEqual([]);
+  it('increases ship hit count by 1', () => {
+    testShip.hit();
+    expect(testShip.getHits()).toEqual(1);
   });
 });
 
 describe('isSunk()', () => {
-  it('sinks ship if it has been hit at all targets', () => {
-    testShip.hit('A1');
-    testShip.hit('A2');
-    testShip.hit('A3');
+  it('returns true if ship has been sunk', () => {
+    testShip.hit();
+    testShip.hit();
+    testShip.hit();
+    testShip.hit();
     expect(testShip.isSunk()).toBe(true);
   });
 
-  it('does not sink ship if it has not been hit at all targets', () => {
-    testShip.hit('A3');
+  it('returns false if ship has not been sunk', () => {
+    testShip.hit();
     expect(testShip.isSunk()).toBe(false);
   });
 });

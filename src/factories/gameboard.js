@@ -1,44 +1,42 @@
 import { ship } from './ship.js';
 
 const gameboard = () => {
+  const generateBoard = () => Array(100).fill(null);
+
+  const board = generateBoard();
+
   const fleet = [];
-  const missedShots = [];
 
-  const getFleet = () => fleet;
-
-  const getMissedShots = () => missedShots;
-
-  const validateCoordsEmpty = (coords) => {
-    const occupiedCoords = fleet.flatMap((ship) => ship.getCoords());
-    const coordCheck = coords.map((coord) => occupiedCoords.includes(coord));
-    if (coordCheck.includes(true)) {
-      throw new Error('Already a ship at that location!');
-    }
+  const placeShip = (ship, coords) => {
+    coords.forEach((coord) => (board[coord] = ship));
   };
 
-  const placeShip = (coords) => {
-    validateCoordsEmpty(coords);
-    const newShip = ship(coords);
-    fleet.push(newShip);
+  const addToFleet = (ship) => fleet.push(ship);
+
+  const addShipToBoard = (type, coords) => {
+    const newShip = ship(type);
+    placeShip(newShip, coords);
+    addToFleet(newShip);
     return newShip;
   };
 
-  const checkFleet = (target) =>
-    fleet.find((ship) => ship.getCoords().includes(target));
+  const checkTarget = (target) => board[target];
+
+  const markMissedAttack = (target) => (board[target] = 'miss');
 
   const receiveAttack = (target) => {
-    const targetedShip = checkFleet(target);
-    targetedShip ? targetedShip.hit(target) : missedShots.push(target);
+    const shipAtTarget = checkTarget(target);
+    return shipAtTarget ? shipAtTarget.hit() : markMissedAttack(target);
   };
 
-  const allShipsSunk = () => fleet.every((ship) => ship.isSunk());
+  const allSunk = () => fleet.every((ship) => ship.isSunk());
 
   return {
-    getFleet,
-    getMissedShots,
-    placeShip,
+    board,
+    fleet,
+    addShipToBoard,
     receiveAttack,
-    allShipsSunk,
+    allSunk,
   };
 };
 
