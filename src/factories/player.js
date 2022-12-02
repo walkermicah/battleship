@@ -5,7 +5,9 @@ const player = () => {
   const attacks = [];
 
   const randomPlay = () => {
-    return Math.floor(Math.random() * 100);
+    const moves = [...Array(100).keys()];
+    const filteredMoves = moves.filter((move) => !attacks.includes(move));
+    return filteredMoves[Math.floor(Math.random() * filteredMoves.length)];
   };
 
   const attackEnemy = (enemy, target = randomPlay()) => {
