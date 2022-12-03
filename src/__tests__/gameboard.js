@@ -1,4 +1,4 @@
-import { gameboard } from '../factories/gameboard.js';
+import gameboard from '../factories/gameboard';
 
 let testGameboard;
 let testShip;
@@ -23,7 +23,7 @@ describe('addShipToBoard()', () => {
   });
 
   it('adds ship to fleet', () => {
-    const fleet = testGameboard.fleet;
+    const { fleet } = testGameboard;
     expect(...fleet).toHaveProperty('type', 'battleship');
   });
 });
@@ -45,10 +45,8 @@ describe('receiveAttack()', () => {
 });
 
 describe('allShipsSunk', () => {
-  let testShip2;
-
   beforeEach(() => {
-    testShip2 = testGameboard.addShipToBoard('destroyer', [30, 31]);
+    testGameboard.addShipToBoard('destroyer', [30, 31]);
   });
 
   it('returns true if all ships in fleet are sunk', () => {

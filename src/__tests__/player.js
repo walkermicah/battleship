@@ -1,4 +1,4 @@
-import { player } from '../factories/player.js';
+import player from '../factories/player';
 
 describe('attackEnemy()', () => {
   let activePlayer;
