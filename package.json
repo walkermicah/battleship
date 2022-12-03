@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/walkermicah/battleship#readme",
   "devDependencies": {
+    "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
+    "babel-loader": "^9.1.0",
     "css-loader": "^6.7.2",
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
