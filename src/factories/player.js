@@ -1,6 +1,6 @@
-import { gameboard } from './gameboard';
+import gameboard from './gameboard';
 
-const player = () => {
+export default function player() {
   const board = gameboard();
   const attacks = [];
 
@@ -21,6 +21,4 @@ const player = () => {
     attacks,
     attackEnemy,
   };
-};
-
-export { player };
+}

@@ -1,17 +1,19 @@
-import { ship } from './ship.js';
+import ship from './ship';
 
-const gameboard = () => {
+export default function gameboard() {
   const generateBoard = () => Array(100).fill(null);
 
   const board = generateBoard();
 
   const fleet = [];
 
-  const placeShip = (ship, coords) => {
-    coords.forEach((coord) => (board[coord] = ship));
+  const placeShip = (boat, coords) => {
+    coords.forEach((coord) => {
+      board[coord] = boat;
+    });
   };
 
-  const addToFleet = (ship) => fleet.push(ship);
+  const addToFleet = (boat) => fleet.push(boat);
 
   const addShipToBoard = (type, coords) => {
     const newShip = ship(type);
@@ -22,14 +24,16 @@ const gameboard = () => {
 
   const checkTarget = (target) => board[target];
 
-  const markMissedAttack = (target) => (board[target] = 'miss');
+  const markMissedAttack = (target) => {
+    board[target] = 'miss';
+  };
 
   const receiveAttack = (target) => {
     const shipAtTarget = checkTarget(target);
     return shipAtTarget ? shipAtTarget.hit() : markMissedAttack(target);
   };
 
-  const allSunk = () => fleet.every((ship) => ship.isSunk());
+  const allSunk = () => fleet.every((boat) => boat.isSunk());
 
   return {
     board,
@@ -38,6 +42,4 @@ const gameboard = () => {
     receiveAttack,
     allSunk,
   };
-};
-
-export { gameboard };
+}

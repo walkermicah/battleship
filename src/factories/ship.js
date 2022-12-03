@@ -1,4 +1,4 @@
-const ship = (type) => {
+export default function ship(type) {
   const shipLengths = [
     ['carrier', 5],
     ['battleship', 4],
@@ -7,7 +7,7 @@ const ship = (type) => {
     ['destroyer', 2],
   ];
 
-  const getLength = () => shipLengths.find((ship) => ship[0] === type)[1];
+  const getLength = () => shipLengths.find((boat) => boat[0] === type)[1];
 
   let hits = 0;
 
@@ -23,6 +23,4 @@ const ship = (type) => {
     hit,
     isSunk,
   };
-};
-
-export { ship };
+}
