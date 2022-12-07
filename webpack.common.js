@@ -16,7 +16,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      // favicon: './src/img/favicon.svg',
+      favicon: './src/assets/img/ship.svg',
       template: './src/template.html',
     }),
   ],
