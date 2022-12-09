@@ -30,7 +30,12 @@ export default function gameboard() {
 
   const receiveAttack = (target) => {
     const shipAtTarget = checkTarget(target);
-    return shipAtTarget ? shipAtTarget.hit() : markMissedAttack(target);
+    if (shipAtTarget) {
+      shipAtTarget.hit();
+      return 'hit';
+    }
+    markMissedAttack(target);
+    return 'miss';
   };
 
   const allSunk = () => fleet.every((boat) => boat.isSunk());
