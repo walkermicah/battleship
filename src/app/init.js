@@ -8,6 +8,7 @@ export default function init() {
   state.humanPlayer = player();
   state.computerPlayer = player();
   state.activePlayer = state.humanPlayer;
+  state.enemyPlayer = state.computerPlayer;
 
   startView();
   addHandlerStart(startHandler);
