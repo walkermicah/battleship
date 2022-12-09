@@ -11,9 +11,11 @@ export default function player() {
   };
 
   const attackEnemy = (enemy, target = randomPlay()) => {
-    if (attacks.includes(target)) return;
-    enemy.board.receiveAttack(target);
-    attacks.push(target);
+    if (!attacks.includes(target)) {
+      const result = enemy.board.receiveAttack(target);
+      attacks.push(target);
+      return result;
+    }
   };
 
   return {
