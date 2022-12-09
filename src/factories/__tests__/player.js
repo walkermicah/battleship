@@ -1,7 +1,12 @@
 import player from '../player';
 
+let activePlayer;
+
+beforeEach(() => {
+  activePlayer = player();
+});
+
 describe('attackEnemy()', () => {
-  let activePlayer;
   let attacks;
   let enemyPlayer;
   let enemyGameboard;
@@ -33,13 +38,6 @@ describe('attackEnemy()', () => {
     expect(attacks).toEqual([target]);
   });
 
-  it('chooses a random target from 0-99 if no target provided', () => {
-    activePlayer.attackEnemy(enemyPlayer);
-    expect(typeof attacks[0]).toBe('number');
-    expect(attacks[0]).toBeGreaterThanOrEqual(0);
-    expect(attacks[0]).toBeLessThanOrEqual(99);
-  });
-
   it('sinks enemy ship', () => {
     activePlayer.attackEnemy(enemyPlayer, target);
     activePlayer.attackEnemy(enemyPlayer, 26);
@@ -55,5 +53,29 @@ describe('attackEnemy()', () => {
   it('returns `miss` if no ships at target', () => {
     const result = activePlayer.attackEnemy(enemyPlayer, 27);
     expect(result).toBe('miss');
+  });
+});
+
+describe('randomPlay', () => {
+  let result;
+
+  beforeEach(() => {
+    result = activePlayer.randomPlay();
+  });
+
+  it('Returns a number', () => {
+    expect(typeof result).toBe('number');
+  });
+
+  it('Returns a number between 0-99', () => {
+    expect(result).toBeGreaterThanOrEqual(0);
+    expect(result).toBeLessThanOrEqual(99);
+  });
+
+  it('Does not return the same number twice', () => {
+    const numbers = [...Array(99).keys()];
+    activePlayer.attacks.push(...numbers);
+    const number = activePlayer.randomPlay();
+    expect(number).toBe(99);
   });
 });

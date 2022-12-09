@@ -10,7 +10,7 @@ export default function player() {
     return filteredMoves[Math.floor(Math.random() * filteredMoves.length)];
   };
 
-  const attackEnemy = (enemy, target = randomPlay()) => {
+  const attackEnemy = (enemy, target) => {
     if (!attacks.includes(target)) {
       const result = enemy.board.receiveAttack(target);
       attacks.push(target);
@@ -22,5 +22,6 @@ export default function player() {
     board,
     attacks,
     attackEnemy,
+    randomPlay,
   };
 }
