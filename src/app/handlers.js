@@ -6,6 +6,7 @@ import {
   addHandlerPlaceFleet,
   addHandlerHumanPlay,
   addHandlerCompPlay,
+  addHandlerPlayAgain,
 } from '../UI/addHandlers';
 import { placeComputerShips, placeHumanShips } from './placeShips';
 import renderShips from '../UI/helpers/renderShips';
@@ -15,9 +16,12 @@ import getTarget from '../UI/helpers/getTarget';
 import getShipType from './helpers/getShipType';
 import checkIfSunk from './helpers/checkIfSunk';
 import switchActivePlayer from './helpers/switchActivePlayer';
-import toggleCompPlayBtn from '../UI/helpers/toggleCompPlayBtn';
+import {
+  showCompPlayBtn,
+  hideCompPlayBtn,
+} from '../UI/helpers/controlCompPlayBtn';
+import checkForWinner from './helpers/checkForWinner';
 
-// human player turn
 const humanPlayHandler = (e) => {
   if (state.activePlayer === state.humanPlayer) {
     const target = getTarget(e);
@@ -25,9 +29,9 @@ const humanPlayHandler = (e) => {
     const shipType = getShipType(result, target);
     renderAttack('enemy', target, shipType, result);
     if (result === 'hit') checkIfSunk(state.computerPlayer, 'enemy', target);
-    // check for winner
+    if (checkForWinner()) return;
     switchActivePlayer();
-    toggleCompPlayBtn();
+    showCompPlayBtn();
   }
 };
 
@@ -37,9 +41,9 @@ const compPlayHandler = () => {
   const shipType = getShipType(result, target);
   renderAttack('active', target, shipType, result);
   if (result === 'hit') checkIfSunk(state.humanPlayer, 'active', target);
-  // check for winner
+  checkForWinner();
   switchActivePlayer();
-  toggleCompPlayBtn();
+  hideCompPlayBtn();
 };
 
 const placeFleetHandler = () => {

@@ -22,9 +22,15 @@ const addHandlerCompPlay = (fn) => {
   compPlayBtn.addEventListener('click', fn);
 };
 
+const addHandlerPlayAgain = (fn) => {
+  const playAgainBtn = document.querySelector('.play-again-btn');
+  playAgainBtn.addEventListener('click', fn);
+};
+
 export {
   addHandlerStart,
   addHandlerPlaceFleet,
   addHandlerHumanPlay,
   addHandlerCompPlay,
+  addHandlerPlayAgain,
 };
