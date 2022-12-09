@@ -28,7 +28,7 @@ const placeComputerShips = () => {
   };
 
   Object.keys(coords).forEach((ship) => {
-    state.humanPlayer.board.addShipToBoard(ship, coords[ship]);
+    state.computerPlayer.board.addShipToBoard(ship, coords[ship]);
   });
 
   return coords;
