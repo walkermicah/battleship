@@ -42,6 +42,18 @@ describe('receiveAttack()', () => {
     expect(board[target]).toBe('miss');
     expect(testShip.getHits()).toBe(0);
   });
+
+  it('returns `hit` if a ship is hit', () => {
+    const target = 50;
+    const result = testGameboard.receiveAttack(target);
+    expect(result).toBe('hit');
+  });
+
+  it('returns `miss` if no ships at target', () => {
+    const target = 60;
+    const result = testGameboard.receiveAttack(target);
+    expect(result).toBe('miss');
+  });
 });
 
 describe('allShipsSunk', () => {

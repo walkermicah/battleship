@@ -41,9 +41,19 @@ describe('attackEnemy()', () => {
   });
 
   it('sinks enemy ship', () => {
-    activePlayer.attackEnemy(enemyPlayer, 25);
+    activePlayer.attackEnemy(enemyPlayer, target);
     activePlayer.attackEnemy(enemyPlayer, 26);
 
     expect(enemyGameboard.allSunk()).toBe(true);
+  });
+
+  it('returns `hit` if a ship is hit', () => {
+    const result = activePlayer.attackEnemy(enemyPlayer, target);
+    expect(result).toBe('hit');
+  });
+
+  it('returns `miss` if no ships at target', () => {
+    const result = activePlayer.attackEnemy(enemyPlayer, 27);
+    expect(result).toBe('miss');
   });
 });
