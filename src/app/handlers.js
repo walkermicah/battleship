@@ -26,6 +26,7 @@ const humanPlayHandler = (e) => {
   if (state.activePlayer === state.humanPlayer) {
     const target = getTarget(e);
     const result = state.humanPlayer.attackEnemy(state.computerPlayer, target);
+    if (!result) return;
     const shipType = getShipType(result, target);
     renderAttack('enemy', target, shipType, result);
     if (result === 'hit') checkIfSunk(state.computerPlayer, 'enemy', target);
