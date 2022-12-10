@@ -31,13 +31,9 @@ const legendContent = () => {
   return content;
 };
 
-const computerPlayBtn = () =>
-  animatedBtn(['computer-play-btn', 'hidden'], '&rarr;');
-
 export default function legend(player) {
   const newLegend = createLegend(player);
   newLegend.appendChild(heading(player));
   newLegend.appendChild(legendContent());
-  if (player === 'enemy') newLegend.appendChild(computerPlayBtn());
   return newLegend;
 }

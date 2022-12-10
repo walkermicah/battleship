@@ -1,7 +1,6 @@
 import animatedBtn from './components/animatedBtn';
 import { fadeDisplay } from '../helpers/controlOpacity';
 import toggleFooter from '../helpers/toggleFooter';
-import { hideCompPlayBtn } from '../helpers/controlCompPlayBtn';
 import changeHeaderText from '../helpers/changeHeaderText';
 
 const announceWinner = (winner) => {
@@ -21,5 +20,4 @@ export default function endView(winner) {
   announceWinner(winner);
   showPlayAgainBtn();
   toggleFooter();
-  hideCompPlayBtn();
 }

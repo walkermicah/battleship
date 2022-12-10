@@ -161,12 +161,6 @@ button {
   background-color: var(--primary-color);
 }
 
-.computer-play-btn {
-  padding: 0rem;
-  font-size: 5rem;
-  margin-top: 5rem;
-}
-
 .place-fleet-btn {
   padding: 0rem 3rem;
   font-size: 3rem;

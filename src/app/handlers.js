@@ -5,7 +5,6 @@ import footer from '../UI/views/components/footer';
 import {
   addHandlerPlaceFleet,
   addHandlerHumanPlay,
-  addHandlerCompPlay,
   addHandlerPlayAgain,
 } from '../UI/addHandlers';
 import { placeComputerShips, placeHumanShips } from './placeShips';
@@ -16,11 +15,17 @@ import getTarget from '../UI/helpers/getTarget';
 import getShipType from './helpers/getShipType';
 import checkIfSunk from './helpers/checkIfSunk';
 import switchActivePlayer from './helpers/switchActivePlayer';
-import {
-  showCompPlayBtn,
-  hideCompPlayBtn,
-} from '../UI/helpers/controlCompPlayBtn';
 import checkForWinner from './helpers/checkForWinner';
+
+const compPlayHandler = () => {
+  const target = state.computerPlayer.randomPlay();
+  const result = state.computerPlayer.attackEnemy(state.humanPlayer, target);
+  const shipType = getShipType(result, target);
+  renderAttack('active', target, shipType, result);
+  if (result === 'hit') checkIfSunk(state.humanPlayer, 'active', target);
+  if (checkForWinner()) return;
+  switchActivePlayer();
+};
 
 const humanPlayHandler = (e) => {
   if (state.activePlayer === state.humanPlayer) {
@@ -32,19 +37,8 @@ const humanPlayHandler = (e) => {
     if (result === 'hit') checkIfSunk(state.computerPlayer, 'enemy', target);
     if (checkForWinner()) return;
     switchActivePlayer();
-    showCompPlayBtn();
   }
-};
-
-const compPlayHandler = () => {
-  const target = state.computerPlayer.randomPlay();
-  const result = state.computerPlayer.attackEnemy(state.humanPlayer, target);
-  const shipType = getShipType(result, target);
-  renderAttack('active', target, shipType, result);
-  if (result === 'hit') checkIfSunk(state.humanPlayer, 'active', target);
-  checkForWinner();
-  switchActivePlayer();
-  hideCompPlayBtn();
+  compPlayHandler();
 };
 
 const placeFleetHandler = () => {
@@ -54,7 +48,6 @@ const placeFleetHandler = () => {
   gameView();
   renderShips(humanShipCoords);
   addHandlerHumanPlay(humanPlayHandler);
-  addHandlerCompPlay(compPlayHandler);
 };
 
 const startHandler = () => {

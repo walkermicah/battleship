@@ -17,11 +17,6 @@ const addHandlerHumanPlay = (fn) => {
   });
 };
 
-const addHandlerCompPlay = (fn) => {
-  const compPlayBtn = document.querySelector('.computer-play-btn');
-  compPlayBtn.addEventListener('click', fn);
-};
-
 const addHandlerPlayAgain = (fn) => {
   const playAgainBtn = document.querySelector('.play-again-btn');
   playAgainBtn.addEventListener('click', fn);
@@ -31,6 +26,5 @@ export {
   addHandlerStart,
   addHandlerPlaceFleet,
   addHandlerHumanPlay,
-  addHandlerCompPlay,
   addHandlerPlayAgain,
 };
