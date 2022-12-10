@@ -54,6 +54,12 @@ describe('attackEnemy()', () => {
     const result = activePlayer.attackEnemy(enemyPlayer, 27);
     expect(result).toBe('miss');
   });
+
+  it('returns undefined if target has already been hit', () => {
+    activePlayer.attackEnemy(enemyPlayer, 27);
+    const result = activePlayer.attackEnemy(enemyPlayer, 27);
+    expect(result).toBeUndefined();
+  });
 });
 
 describe('randomPlay', () => {

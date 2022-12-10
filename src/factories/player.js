@@ -11,11 +11,10 @@ export default function player() {
   };
 
   const attackEnemy = (enemy, target) => {
-    if (!attacks.includes(target)) {
-      const result = enemy.board.receiveAttack(target);
-      attacks.push(target);
-      return result;
-    }
+    if (attacks.includes(target)) return;
+    const result = enemy.board.receiveAttack(target);
+    attacks.push(target);
+    return result;
   };
 
   return {
