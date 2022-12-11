@@ -7,6 +7,9 @@ export default function clearUI() {
 
   if (container.lastElementChild.classList.contains('play-again-btn')) {
     container.removeChild(container.lastChild);
-    display.removeChild(display.lastChild);
+
+    if (display.lastElementChild.classList.contains('footer')) {
+      display.removeChild(display.lastChild);
+    }
   }
 }
