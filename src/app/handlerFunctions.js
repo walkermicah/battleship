@@ -2,11 +2,6 @@ import clearUI from '../UI/helpers/clearUI';
 import placeFleetView from '../UI/views/placeFleetView';
 import gameView from '../UI/views/gameView';
 import footer from '../UI/views/components/footer';
-import {
-  addHandlerPlaceFleet,
-  addHandlerHumanPlay,
-  addHandlerPlayAgain,
-} from '../UI/addHandlers';
 import { placeComputerShips, placeHumanShips } from './placeShips';
 import renderShips from '../UI/helpers/renderShips';
 import { state } from './state';
@@ -16,8 +11,25 @@ import getShipType from './helpers/getShipType';
 import checkIfSunk from './helpers/checkIfSunk';
 import switchActivePlayer from './helpers/switchActivePlayer';
 import checkForWinner from './helpers/checkForWinner';
+import { restoreDisplay } from '../UI/helpers/controlOpacity';
+import changeHeaderText from '../UI/helpers/changeHeaderText';
+import init from './init';
 
-const compPlayHandler = () => {
+export const startGame = () => {
+  clearUI();
+  placeFleetView();
+  footer();
+};
+
+export const placeFleet = () => {
+  const humanShipCoords = placeHumanShips();
+  placeComputerShips();
+  clearUI();
+  gameView();
+  renderShips(humanShipCoords);
+};
+
+export const compPlay = () => {
   const target = state.computerPlayer.randomPlay();
   const result = state.computerPlayer.attackEnemy(state.humanPlayer, target);
   const shipType = getShipType(result, target);
@@ -27,7 +39,7 @@ const compPlayHandler = () => {
   switchActivePlayer();
 };
 
-const humanPlayHandler = (e) => {
+export const humanPlay = (e) => {
   if (state.activePlayer === state.humanPlayer) {
     const target = getTarget(e);
     const result = state.humanPlayer.attackEnemy(state.computerPlayer, target);
@@ -38,23 +50,12 @@ const humanPlayHandler = (e) => {
     if (checkForWinner()) return;
     switchActivePlayer();
   }
-  compPlayHandler();
+  compPlay();
 };
 
-const placeFleetHandler = () => {
-  const humanShipCoords = placeHumanShips();
-  placeComputerShips();
+export const playAgain = () => {
   clearUI();
-  gameView();
-  renderShips(humanShipCoords);
-  addHandlerHumanPlay(humanPlayHandler);
+  restoreDisplay();
+  changeHeaderText('Battleship');
+  init();
 };
-
-const startHandler = () => {
-  clearUI();
-  placeFleetView();
-  footer();
-  addHandlerPlaceFleet(placeFleetHandler);
-};
-
-export { startHandler };
