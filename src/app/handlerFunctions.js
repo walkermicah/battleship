@@ -2,7 +2,7 @@ import clearUI from '../UI/helpers/clearUI';
 import placeFleetView from '../UI/views/placeFleetView';
 import gameView from '../UI/views/gameView';
 import footer from '../UI/views/components/footer';
-import { placeComputerShips, placeHumanShips } from './placeShips';
+import { placeHumanShips } from './placeShips';
 import renderShips from '../UI/helpers/renderShips';
 import { state } from './state';
 import renderAttack from '../UI/helpers/renderAttack';
@@ -23,7 +23,7 @@ export const startGame = () => {
 
 export const placeFleet = () => {
   const humanShipCoords = placeHumanShips();
-  placeComputerShips();
+  state.computerPlayer.positionShips();
   clearUI();
   gameView();
   renderShips(humanShipCoords);

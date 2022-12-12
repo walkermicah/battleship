@@ -18,20 +18,20 @@ const placeHumanShips = () => {
 };
 
 // Place computer ships on gameboard
-const placeComputerShips = () => {
-  const coords = {
-    carrier: [55, 65, 75, 85, 95],
-    battleship: [62, 72, 82, 92],
-    cruiser: [15, 16, 17],
-    submarine: [1, 2, 3],
-    destroyer: [29, 39],
-  };
+// const placeComputerShips = () => {
+//   const coords = {
+//     carrier: [55, 65, 75, 85, 95],
+//     battleship: [62, 72, 82, 92],
+//     cruiser: [15, 16, 17],
+//     submarine: [1, 2, 3],
+//     destroyer: [29, 39],
+//   };
 
-  Object.keys(coords).forEach((ship) => {
-    state.computerPlayer.board.addShipToBoard(ship, coords[ship]);
-  });
+//   Object.keys(coords).forEach((ship) => {
+//     state.computerPlayer.board.addShipToBoard(ship, coords[ship]);
+//   });
 
-  return coords;
-};
+//   return coords;
+// };
 
-export { placeHumanShips, placeComputerShips };
+export { placeHumanShips };
