@@ -29,8 +29,14 @@ export const placeFleet = () => {
 };
 
 export const compPlay = () => {
-  const target = state.computerPlayer.randomPlay();
-  const result = state.computerPlayer.attackEnemy(state.humanPlayer, target);
+  // const target = state.computerPlayer.randomPlay();
+  // const result = state.computerPlayer.attackEnemy(state.humanPlayer, target);
+  const target = state.computerPlayer.smartPlay();
+  const result = state.computerPlayer.attackEnemy(
+    state.humanPlayer,
+    target,
+    true
+  );
   const shipType = getShipType(result, target);
   renderAttack('active', target, shipType, result);
   if (result === 'hit') checkIfSunk(state.humanPlayer, 'active', target);
