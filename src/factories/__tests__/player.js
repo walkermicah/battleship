@@ -1,46 +1,115 @@
 import player from '../player';
 
 let activePlayer;
+let attacks;
+let enemyPlayer;
+let enemyGameboard;
 
 beforeEach(() => {
   activePlayer = player();
+  attacks = activePlayer.attacks;
+
+  enemyPlayer = player();
+  enemyGameboard = enemyPlayer.board;
 });
 
-describe('randomPlay()', () => {
-  let result;
-
+describe('smartPlay()', () => {
   beforeEach(() => {
-    result = activePlayer.randomPlay();
+    enemyGameboard.addShipToBoard('carrier', [0, 1, 2, 3, 4, 5]);
+    enemyGameboard.addShipToBoard('battleship', [9, 19, 29, 39]);
+    enemyGameboard.addShipToBoard('destroyer', [55, 56]);
   });
 
-  it('Returns a number', () => {
-    expect(typeof result).toBe('number');
+  it('returns a random number between 0-99', () => {
+    const target = activePlayer.smartPlay();
+    expect(typeof target).toBe('number');
+    expect(target).toBeGreaterThanOrEqual(0);
+    expect(target).toBeLessThanOrEqual(99);
   });
 
-  it('Returns a number between 0-99', () => {
-    expect(result).toBeGreaterThanOrEqual(0);
-    expect(result).toBeLessThanOrEqual(99);
+  it('returns an adjacent position if previous attack was a hit', () => {
+    activePlayer.attackEnemy(enemyPlayer, 1, true);
+    const target = activePlayer.smartPlay();
+    expect(target).toBe(0);
   });
 
-  it('Does not return the same number twice', () => {
-    const numbers = [...Array(99).keys()];
-    activePlayer.attacks.push(...numbers);
-    const number = activePlayer.randomPlay();
-    expect(number).toBe(99);
+  it('returns next adjacent horizontal position if prev 2+ attacks in that direction were hits', () => {
+    activePlayer.attackEnemy(enemyPlayer, 2, true);
+    const target1 = activePlayer.smartPlay(); // 1
+    activePlayer.attackEnemy(enemyPlayer, target1, true); // hit
+    const target2 = activePlayer.smartPlay();
+    expect(target2).toBe(0);
+  });
+
+  it('returns next adjacent vertical position if prev 2+ attacks in that direction were hits', () => {
+    activePlayer.attackEnemy(enemyPlayer, 29, true);
+    const target1 = activePlayer.smartPlay(); // 28
+    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
+    const target2 = activePlayer.smartPlay(); // 19
+    activePlayer.attackEnemy(enemyPlayer, target2, true); // hit
+    const target3 = activePlayer.smartPlay();
+    expect(target3).toBe(9);
+  });
+
+  it('stops adjacent attacks when next attack is a miss', () => {
+    activePlayer.attackEnemy(enemyPlayer, 55, true);
+    const target1 = activePlayer.smartPlay(); // 54
+    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
+    const target2 = activePlayer.smartPlay();
+    expect(target2).not.toBe(53);
+  });
+
+  it('stops adjacent attacks at the end of a row', () => {
+    activePlayer.attackEnemy(enemyPlayer, 0, true);
+    const target = activePlayer.smartPlay();
+    expect(target).not.toBe(-1);
+  });
+
+  it('stops adjacent attacks at the end of a column', () => {
+    activePlayer.attackEnemy(enemyPlayer, 19, true);
+    const target1 = activePlayer.smartPlay(); // 18
+    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
+    const target2 = activePlayer.smartPlay(); // 20
+    activePlayer.attackEnemy(enemyPlayer, target2, true); // miss
+    const target3 = activePlayer.smartPlay(); // 9
+    activePlayer.attackEnemy(enemyPlayer, target3, true); // hit
+    const target4 = activePlayer.smartPlay();
+    expect(target4).not.toBe(-9);
+  });
+
+  it('does not attack the same location twice', () => {
+    activePlayer.attackEnemy(enemyPlayer, 19, true);
+    const target1 = activePlayer.smartPlay(); // 18
+    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
+    const target2 = activePlayer.smartPlay(); // 20
+    activePlayer.attackEnemy(enemyPlayer, target2, true); // miss
+    const target3 = activePlayer.smartPlay(); // 9
+    activePlayer.attackEnemy(enemyPlayer, target3, true); // hit
+    const target4 = activePlayer.smartPlay();
+    expect(target4).not.toBe(9);
+  });
+
+  it('stops attacking adjacent positions when ship is sunk', () => {
+    activePlayer.attackEnemy(enemyPlayer, 56, true);
+    const target1 = activePlayer.smartPlay(); // 55
+    activePlayer.attackEnemy(enemyPlayer, target1, true); // sunk
+    const target2 = activePlayer.smartPlay();
+    expect([54, 57, 46, 66]).not.toContain(target2, true);
+  });
+
+  it('backtracks in opposite direction if end of ship has been reached but ship has not been sunk', () => {
+    activePlayer.attackEnemy(enemyPlayer, 1, true);
+    const target4 = activePlayer.smartPlay(); // 0
+    activePlayer.attackEnemy(enemyPlayer, target4, true); // hit
+    const target5 = activePlayer.smartPlay();
+    expect(target5).toBe(2);
   });
 });
 
 describe('attackEnemy()', () => {
-  let attacks;
-  let enemyPlayer;
-  let enemyGameboard;
   const target = 25;
 
   beforeEach(() => {
-    attacks = activePlayer.attacks;
-
-    enemyPlayer = player();
-    enemyGameboard = enemyPlayer.board;
     enemyGameboard.addShipToBoard('destroyer', [25, 26]);
   });
 
@@ -140,7 +209,7 @@ describe('filterInvalidCoords()', () => {
     expect(filteredPositions.length).toBe(0);
   });
 
-  it('filters out the last (n - 2) rows for a vertical ship', () => {
+  it('filters out the last (n - 1) rows for a vertical ship', () => {
     const result = activePlayer.filterInvalidCoords('vertical', n);
     const offBoardPositions = [90, 91, 92, 93, 94, 95, 96, 97, 98, 99];
     const filteredPositions = result.filter((coord) =>

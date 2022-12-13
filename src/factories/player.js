@@ -4,7 +4,9 @@ export default function player() {
   const board = gameboard();
   const positions = [...Array(100).keys()];
   const attacks = [];
+  const attackQueue = [];
 
+  // Methods for computer player target selection
   const randomPlay = () => {
     const filteredMoves = positions.filter(
       (position) => !attacks.includes(position)
@@ -12,14 +14,67 @@ export default function player() {
     return filteredMoves[Math.floor(Math.random() * filteredMoves.length)];
   };
 
-  const attackEnemy = (enemy, target) => {
-    if (attacks.includes(target)) return;
-    const result = enemy.board.receiveAttack(target);
-    attacks.push(target);
-    return result;
+  const smartPlay = () => {
+    let target;
+    if (attackQueue.length > 0) {
+      const nextInQueue = attackQueue[0].at(-1);
+      if (attacks.includes(nextInQueue)) attackQueue.shift();
+      target = attackQueue[0].at(-1);
+    } else {
+      target = randomPlay();
+    }
+    return target;
   };
 
-  // Helper functions for computer player ship selection
+  const nextHMoveValid = (coord) => (coord + 1).toString().slice(-1) !== '0';
+
+  const nextVMoveValid = (coord) => coord + 10 < 100;
+
+  const prevHMoveValid = (coord) =>
+    (coord - 1).toString().slice(-1) !== '9' && coord - 1 >= 0;
+
+  const prevVMoveValid = (coord) => coord - 10 >= 0;
+
+  const queueNextMoves = (coord) => {
+    // if coord is already in the queue, add next target to the chain
+    const coordIsInQueue = attackQueue.flat().includes(coord);
+    if (coordIsInQueue) {
+      const sequence = attackQueue.find((el) => el.includes(coord));
+
+      if (sequence[0] - sequence[1] === 1 && prevHMoveValid(coord)) {
+        sequence.push(coord - 1);
+      }
+      if (sequence[0] - sequence[1] === -1 && nextHMoveValid(coord)) {
+        sequence.push(coord + 1);
+      }
+      if (sequence[0] - sequence[1] === 10 && prevVMoveValid(coord)) {
+        sequence.push(coord - 10);
+      }
+      if (sequence[0] - sequence[1] === -10 && nextVMoveValid(coord)) {
+        sequence.push(coord + 10);
+      }
+    } else {
+      // Add adjacent horizontal and vertical moves to queue
+      if (prevHMoveValid(coord)) attackQueue.push([coord, coord - 1]);
+      if (nextHMoveValid(coord)) attackQueue.push([coord, coord + 1]);
+      if (prevVMoveValid(coord)) attackQueue.push([coord, coord - 10]);
+      if (nextVMoveValid(coord)) attackQueue.push([coord, coord + 10]);
+    }
+  };
+
+  const updateQueue = (enemy, result, target) => {
+    if (result === 'hit') {
+      const shipIsSunk = enemy.board.board[target].isSunk();
+      if (shipIsSunk) {
+        attackQueue.length = 0;
+      } else {
+        queueNextMoves(target);
+      }
+    }
+    if (result === 'miss') attackQueue.shift();
+  };
+
+  // Methods for computer player ship selection
   const filterInvalidCoords = (orientation, length) => {
     if (orientation === 'horizontal') {
       const filteredCoords = [];
@@ -65,7 +120,6 @@ export default function player() {
   const randomCoord = (coords) =>
     coords[Math.floor(Math.random() * coords.length)];
 
-  // Generate ship positions for computer player
   const generateCompCoords = () => {
     const ships = {
       carrier: 5,
@@ -111,14 +165,25 @@ export default function player() {
     });
   };
 
+  // Attack other player's gameboard
+  const attackEnemy = (enemy, target, computerPlayer = false) => {
+    if (attacks.includes(target)) return;
+    const result = enemy.board.receiveAttack(target);
+
+    if (computerPlayer) updateQueue(enemy, result, target);
+
+    attacks.push(target);
+    return result;
+  };
+
   return {
     board,
     attacks,
-    attackEnemy,
-    randomPlay,
+    smartPlay,
     generateCompCoords,
     filterInvalidCoords,
     filterOverlapCoords,
     positionShips,
+    attackEnemy,
   };
 }
