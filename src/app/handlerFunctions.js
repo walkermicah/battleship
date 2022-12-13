@@ -9,7 +9,6 @@ import renderAttack from '../UI/helpers/renderAttack';
 import getTarget from '../UI/helpers/getTarget';
 import getShipType from './helpers/getShipType';
 import checkIfSunk from './helpers/checkIfSunk';
-import switchActivePlayer from './helpers/switchActivePlayer';
 import checkForWinner from './helpers/checkForWinner';
 import { restoreDisplay } from '../UI/helpers/controlOpacity';
 import changeHeaderText from '../UI/helpers/changeHeaderText';
@@ -36,7 +35,7 @@ export const compPlay = () => {
   renderAttack('active', target, shipType, result);
   if (result === 'hit') checkIfSunk(state.humanPlayer, 'active', target);
   if (checkForWinner()) return;
-  switchActivePlayer();
+  state.switchActivePlayer();
 };
 
 export const humanPlay = (e) => {
@@ -48,7 +47,7 @@ export const humanPlay = (e) => {
     renderAttack('enemy', target, shipType, result);
     if (result === 'hit') checkIfSunk(state.computerPlayer, 'enemy', target);
     if (checkForWinner()) return;
-    switchActivePlayer();
+    state.switchActivePlayer();
   }
   compPlay();
 };
