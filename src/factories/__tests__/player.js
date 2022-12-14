@@ -15,94 +15,83 @@ beforeEach(() => {
 
 describe('smartPlay()', () => {
   beforeEach(() => {
-    enemyGameboard.addShipToBoard('carrier', [0, 1, 2, 3, 4, 5]);
-    enemyGameboard.addShipToBoard('battleship', [9, 19, 29, 39]);
     enemyGameboard.addShipToBoard('destroyer', [55, 56]);
   });
 
-  it('returns a random number between 0-99', () => {
+  it('returns a random number between 0-99 if no moves in the queue', () => {
     const target = activePlayer.smartPlay();
     expect(typeof target).toBe('number');
     expect(target).toBeGreaterThanOrEqual(0);
     expect(target).toBeLessThanOrEqual(99);
   });
 
-  it('returns an adjacent position if previous attack was a hit', () => {
-    activePlayer.attackEnemy(enemyPlayer, 1, true);
-    const target = activePlayer.smartPlay();
-    expect(target).toBe(0);
-  });
-
-  it('returns next adjacent horizontal position if prev 2+ attacks in that direction were hits', () => {
-    activePlayer.attackEnemy(enemyPlayer, 2, true);
-    const target1 = activePlayer.smartPlay(); // 1
-    activePlayer.attackEnemy(enemyPlayer, target1, true); // hit
-    const target2 = activePlayer.smartPlay();
-    expect(target2).toBe(0);
-  });
-
-  it('returns next adjacent vertical position if prev 2+ attacks in that direction were hits', () => {
-    activePlayer.attackEnemy(enemyPlayer, 29, true);
-    const target1 = activePlayer.smartPlay(); // 28
-    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
-    const target2 = activePlayer.smartPlay(); // 19
-    activePlayer.attackEnemy(enemyPlayer, target2, true); // hit
-    const target3 = activePlayer.smartPlay();
-    expect(target3).toBe(9);
-  });
-
-  it('stops adjacent attacks when next attack is a miss', () => {
+  it('returns next position in the queue if previous attack was a hit', () => {
     activePlayer.attackEnemy(enemyPlayer, 55, true);
-    const target1 = activePlayer.smartPlay(); // 54
-    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
-    const target2 = activePlayer.smartPlay();
-    expect(target2).not.toBe(53);
-  });
-
-  it('stops adjacent attacks at the end of a row', () => {
-    activePlayer.attackEnemy(enemyPlayer, 0, true);
     const target = activePlayer.smartPlay();
-    expect(target).not.toBe(-1);
+    expect([54, 56, 45, 65]).toContain(target);
   });
 
-  it('stops adjacent attacks at the end of a column', () => {
-    activePlayer.attackEnemy(enemyPlayer, 19, true);
-    const target1 = activePlayer.smartPlay(); // 18
-    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
-    const target2 = activePlayer.smartPlay(); // 20
-    activePlayer.attackEnemy(enemyPlayer, target2, true); // miss
-    const target3 = activePlayer.smartPlay(); // 9
-    activePlayer.attackEnemy(enemyPlayer, target3, true); // hit
-    const target4 = activePlayer.smartPlay();
-    expect(target4).not.toBe(-9);
+  it('does not return a position that has already been attacked', () => {
+    activePlayer.attacks.push(45);
+    activePlayer.attackQueue.push([55, 45], [55, 65]);
+    expect(activePlayer.smartPlay()).toBe(65);
+  });
+});
+
+describe('updateQueue()', () => {
+  beforeEach(() => {
+    enemyGameboard.addShipToBoard('battleship', [6, 7, 8, 9]);
+    enemyGameboard.addShipToBoard('submarine', [79, 89, 99]);
+    enemyGameboard.addShipToBoard('cruiser', [25, 26, 27]);
+    enemyGameboard.addShipToBoard('destroyer', [60, 70]);
   });
 
-  it('does not attack the same location twice', () => {
-    activePlayer.attackEnemy(enemyPlayer, 19, true);
-    const target1 = activePlayer.smartPlay(); // 18
-    activePlayer.attackEnemy(enemyPlayer, target1, true); // miss
-    const target2 = activePlayer.smartPlay(); // 20
-    activePlayer.attackEnemy(enemyPlayer, target2, true); // miss
-    const target3 = activePlayer.smartPlay(); // 9
-    activePlayer.attackEnemy(enemyPlayer, target3, true); // hit
-    const target4 = activePlayer.smartPlay();
-    expect(target4).not.toBe(9);
+  it('adds next moves to computer player queue after a successful attack', () => {
+    activePlayer.attackEnemy(enemyPlayer, 26, true);
+    const expectedQueue = [
+      [26, 25],
+      [26, 27],
+      [26, 16],
+      [26, 36],
+    ];
+    const firstInQueue = activePlayer.attackQueue[0];
+    expect(expectedQueue).toContainEqual(firstInQueue);
   });
 
-  it('stops attacking adjacent positions when ship is sunk', () => {
-    activePlayer.attackEnemy(enemyPlayer, 56, true);
-    const target1 = activePlayer.smartPlay(); // 55
-    activePlayer.attackEnemy(enemyPlayer, target1, true); // sunk
-    const target2 = activePlayer.smartPlay();
-    expect([54, 57, 46, 66]).not.toContain(target2, true);
+  it('queues next adjacent horizontal position if prev 2+ attacks in that direction were hits', () => {
+    activePlayer.attackQueue.push([6, 7]);
+    activePlayer.updateQueue(enemyPlayer, 'hit', 7);
+    expect(activePlayer.attackQueue[0]).toEqual([6, 7, 8]);
   });
 
-  it('backtracks in opposite direction if end of ship has been reached but ship has not been sunk', () => {
-    activePlayer.attackEnemy(enemyPlayer, 1, true);
-    const target4 = activePlayer.smartPlay(); // 0
-    activePlayer.attackEnemy(enemyPlayer, target4, true); // hit
-    const target5 = activePlayer.smartPlay();
-    expect(target5).toBe(2);
+  it('queues next adjacent vertical position if prev 2+ attacks in that direction were hits', () => {
+    activePlayer.attackQueue.push([99, 89]);
+    activePlayer.updateQueue(enemyPlayer, 'hit', 89);
+    expect(activePlayer.attackQueue[0]).toEqual([99, 89, 79]);
+  });
+
+  it('removes first element from queue if attack is a miss', () => {
+    activePlayer.attackQueue.push([79, 69], [79, 89]);
+    activePlayer.updateQueue(enemyPlayer, 'miss', 69);
+    expect(activePlayer.attackQueue).toEqual([[79, 89]]);
+  });
+
+  it('stops adding adjacent positions to queue at the end of a row', () => {
+    activePlayer.attackQueue.push([8, 9]);
+    activePlayer.updateQueue(enemyPlayer, 'hit', 9);
+    expect(activePlayer.attackQueue[0]).not.toEqual([8, 9, 10]);
+  });
+
+  it('stops adding adjacent positions to queue at the end of a column', () => {
+    activePlayer.attackQueue.push([89, 99]);
+    activePlayer.updateQueue(enemyPlayer, 'hit', 99);
+    expect(activePlayer.attackQueue[0]).not.toEqual([89, 99, 109]);
+  });
+
+  it('empties queue when ship is sunk', () => {
+    activePlayer.attackEnemy(enemyPlayer, 60, true);
+    activePlayer.attackEnemy(enemyPlayer, 70, true);
+    expect(activePlayer.attackQueue.length).toBe(0);
   });
 });
 
