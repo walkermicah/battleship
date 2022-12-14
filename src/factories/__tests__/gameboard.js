@@ -7,7 +7,7 @@ const testCoords = [50, 51, 52, 53];
 
 beforeEach(() => {
   testGameboard = gameboard();
-  board = testGameboard.board;
+  board = testGameboard.positions;
   testShip = testGameboard.addShipToBoard('battleship', testCoords);
 });
 

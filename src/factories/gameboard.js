@@ -3,13 +3,13 @@ import ship from './ship';
 export default function gameboard() {
   const generateBoard = () => Array(100).fill(null);
 
-  const board = generateBoard();
+  const positions = generateBoard(); // positions
 
   const fleet = [];
 
   const placeShip = (boat, coords) => {
     coords.forEach((coord) => {
-      board[coord] = boat;
+      positions[coord] = boat;
     });
   };
 
@@ -22,10 +22,10 @@ export default function gameboard() {
     return newShip;
   };
 
-  const checkTarget = (target) => board[target];
+  const checkTarget = (target) => positions[target];
 
   const markMissedAttack = (target) => {
-    board[target] = 'miss';
+    positions[target] = 'miss';
   };
 
   const receiveAttack = (target) => {
@@ -41,7 +41,7 @@ export default function gameboard() {
   const allSunk = () => fleet.every((boat) => boat.isSunk());
 
   return {
-    board,
+    positions,
     fleet,
     addShipToBoard,
     receiveAttack,

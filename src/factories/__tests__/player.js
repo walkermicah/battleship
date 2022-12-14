@@ -104,7 +104,7 @@ describe('attackEnemy()', () => {
 
   it('attacks enemy ship at the target location', () => {
     activePlayer.attackEnemy(enemyPlayer, target);
-    const enemyShipHits = enemyGameboard.board[target].getHits();
+    const enemyShipHits = enemyGameboard.positions[target].getHits();
     expect(enemyShipHits).toBe(1);
   });
 
@@ -268,6 +268,9 @@ describe('positionShips()', () => {
       battleship: [72],
     };
     activePlayer.positionShips(coords);
-    expect(activePlayer.board.board[72]).toHaveProperty('type', 'battleship');
+    expect(activePlayer.board.positions[72]).toHaveProperty(
+      'type',
+      'battleship'
+    );
   });
 });

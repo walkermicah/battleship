@@ -77,7 +77,7 @@ export default function player() {
 
   const updateQueue = (enemy, result, target) => {
     if (result === 'hit') {
-      const shipIsSunk = enemy.board.board[target].isSunk();
+      const shipIsSunk = enemy.board.positions[target].isSunk();
       if (shipIsSunk) {
         attackQueue.length = 0;
       } else {
