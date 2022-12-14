@@ -54,11 +54,24 @@ export default function player() {
         sequence.push(coord + 10);
       }
     } else {
-      // Add adjacent horizontal and vertical moves to queue
-      if (prevHMoveValid(coord)) attackQueue.push([coord, coord - 1]);
-      if (nextHMoveValid(coord)) attackQueue.push([coord, coord + 1]);
-      if (prevVMoveValid(coord)) attackQueue.push([coord, coord - 10]);
-      if (nextVMoveValid(coord)) attackQueue.push([coord, coord + 10]);
+      // Get next valid horizontal and vertical moves
+      const nextMoves = [[], []];
+      if (prevHMoveValid(coord)) nextMoves[0].push([coord, coord - 1]);
+      if (nextHMoveValid(coord)) nextMoves[0].push([coord, coord + 1]);
+      if (prevVMoveValid(coord)) nextMoves[1].push([coord, coord - 10]);
+      if (nextVMoveValid(coord)) nextMoves[1].push([coord, coord + 10]);
+
+      // Randomly choose whether to attack horizontally or vertically first
+      const orientation = Math.floor(Math.random() * 2);
+
+      // Push valid moves to queue
+      attackQueue.push(...nextMoves[orientation]);
+
+      if (orientation === 0) {
+        attackQueue.push(...nextMoves[1]);
+      } else {
+        attackQueue.push(...nextMoves[0]);
+      }
     }
   };
 
@@ -72,6 +85,17 @@ export default function player() {
       }
     }
     if (result === 'miss') attackQueue.shift();
+  };
+
+  // Attack other player's gameboard
+  const attackEnemy = (enemy, target, computerPlayer = false) => {
+    if (attacks.includes(target)) return;
+    const result = enemy.board.receiveAttack(target);
+
+    if (computerPlayer) updateQueue(enemy, result, target);
+
+    attacks.push(target);
+    return result;
   };
 
   // Methods for computer player ship selection
@@ -120,6 +144,7 @@ export default function player() {
   const randomCoord = (coords) =>
     coords[Math.floor(Math.random() * coords.length)];
 
+  // Generate random coordinates for computer ships
   const generateCompCoords = () => {
     const ships = {
       carrier: 5,
@@ -165,25 +190,16 @@ export default function player() {
     });
   };
 
-  // Attack other player's gameboard
-  const attackEnemy = (enemy, target, computerPlayer = false) => {
-    if (attacks.includes(target)) return;
-    const result = enemy.board.receiveAttack(target);
-
-    if (computerPlayer) updateQueue(enemy, result, target);
-
-    attacks.push(target);
-    return result;
-  };
-
   return {
     board,
     attacks,
+    attackQueue,
     smartPlay,
+    updateQueue,
+    attackEnemy,
     generateCompCoords,
     filterInvalidCoords,
     filterOverlapCoords,
     positionShips,
-    attackEnemy,
   };
 }
