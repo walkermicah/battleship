@@ -79,3 +79,80 @@ describe('allShipsSunk', () => {
     expect(testGameboard.allSunk()).toBe(false);
   });
 });
+
+describe('filterInvalidCoords()', () => {
+  const n = 2;
+
+  it('filters out the last (n - 1) columns for a horizontal ship', () => {
+    const result = testGameboard.filterInvalidCoords('horizontal', n);
+    const offBoardPositions = [9, 19, 29, 39, 49, 59, 69, 79, 89, 99];
+    const filteredPositions = result.filter((coord) =>
+      offBoardPositions.includes(coord)
+    );
+
+    expect(filteredPositions.length).toBe(0);
+  });
+
+  it('filters out the last (n - 1) rows for a vertical ship', () => {
+    const result = testGameboard.filterInvalidCoords('vertical', n);
+    const offBoardPositions = [90, 91, 92, 93, 94, 95, 96, 97, 98, 99];
+    const filteredPositions = result.filter((coord) =>
+      offBoardPositions.includes(coord)
+    );
+
+    expect(filteredPositions.length).toBe(0);
+  });
+});
+
+describe('filterOverlapCoords', () => {
+  let availableHCoords;
+
+  beforeEach(() => {
+    availableHCoords = testGameboard.filterInvalidCoords('horizontal', 2);
+  });
+
+  it('filters out occupied positions', () => {
+    const occupiedCoords = [...Array(96).keys()];
+    const result = testGameboard.filterOverlapCoords(
+      availableHCoords,
+      occupiedCoords,
+      'horizontal',
+      2
+    );
+    expect(result).toEqual([96, 97, 98]);
+  });
+
+  it('filters out horizontal positions that would overlap with other ships', () => {
+    const occupiedCoords = [...Array(96).keys(), 97];
+    const result = testGameboard.filterOverlapCoords(
+      availableHCoords,
+      occupiedCoords,
+      'horizontal',
+      2
+    );
+    expect(result).toEqual([98]);
+  });
+
+  it('filters out vertical positions that would overlap with other ships', () => {
+    const availableVCoords = testGameboard.filterInvalidCoords('vertical', 2);
+    const occupiedCoords = [
+      ...Array(88).keys(),
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+    ];
+    const result = testGameboard.filterOverlapCoords(
+      availableVCoords,
+      occupiedCoords,
+      'vertical',
+      2
+    );
+    expect(result).toEqual([89]);
+  });
+});

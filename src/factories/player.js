@@ -2,13 +2,13 @@ import gameboard from './gameboard';
 
 export default function player() {
   const board = gameboard();
-  const positions = [...Array(100).keys()];
+  const coordinates = [...Array(100).keys()];
   const attacks = [];
   const attackQueue = [];
 
   // Methods for computer player target selection
   const randomPlay = () => {
-    const filteredMoves = positions.filter(
+    const filteredMoves = coordinates.filter(
       (position) => !attacks.includes(position)
     );
     return filteredMoves[Math.floor(Math.random() * filteredMoves.length)];
@@ -99,43 +99,6 @@ export default function player() {
   };
 
   // Methods for computer player ship selection
-  const filterInvalidCoords = (orientation, length) => {
-    if (orientation === 'horizontal') {
-      const filteredCoords = [];
-      for (let i = 0; i < 10; i++) {
-        filteredCoords.push(
-          positions.filter(
-            (coord) => coord >= i * 10 && coord < i * 10 + (11 - length)
-          )
-        );
-      }
-      return filteredCoords.flat();
-    }
-
-    if (orientation === 'vertical') {
-      return positions.filter((coord) => coord < 100 - (length - 1) * 10);
-    }
-  };
-
-  const filterOverlapCoords = (
-    availableCoords,
-    occupiedCoords,
-    orientation,
-    length
-  ) => {
-    const occupied = [];
-
-    availableCoords.forEach((coord) => {
-      for (let i = 0; i < length; i++) {
-        const increment =
-          orientation === 'horizontal' ? coord + i : coord + i * 10;
-        if (occupiedCoords.includes(increment)) occupied.push(coord);
-      }
-    });
-
-    return availableCoords.filter((coord) => !occupied.includes(coord));
-  };
-
   const randomOrientation = () => {
     const orientations = ['horizontal', 'vertical'];
     return orientations[Math.floor(Math.random() * 2)];
@@ -144,7 +107,6 @@ export default function player() {
   const randomCoord = (coords) =>
     coords[Math.floor(Math.random() * coords.length)];
 
-  // Generate random coordinates for computer ships
   const generateCompCoords = () => {
     const ships = {
       carrier: 5,
@@ -159,8 +121,12 @@ export default function player() {
     Object.keys(ships).forEach((ship) => {
       const orientation = randomOrientation();
 
-      const noInvalidCoords = filterInvalidCoords(orientation, ships[ship]);
-      const noOverlapCoords = filterOverlapCoords(
+      const noInvalidCoords = board.filterInvalidCoords(
+        orientation,
+        ships[ship]
+      );
+
+      const noOverlapCoords = board.filterOverlapCoords(
         noInvalidCoords,
         occupiedCoords,
         orientation,
@@ -198,8 +164,6 @@ export default function player() {
     updateQueue,
     attackEnemy,
     generateCompCoords,
-    filterInvalidCoords,
-    filterOverlapCoords,
     positionShips,
   };
 }
