@@ -1,12 +1,11 @@
-const placements = {
-  carrier: [],
-  battleship: [],
-  cruiser: [],
-  submarine: [],
-  destroyer: [],
-};
-
 export default function getShipPlacements() {
+  const placements = {
+    carrier: [],
+    battleship: [],
+    cruiser: [],
+    submarine: [],
+    destroyer: [],
+  };
   const gridHoles = document.querySelectorAll('.grid-hole span');
 
   gridHoles.forEach((hole) => {
