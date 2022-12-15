@@ -1,6 +1,7 @@
 import './style.css';
 import init from './app/init';
 import * as handlers from './app/handlerFunctions';
+import { closeModal } from './UI/helpers/controlModal';
 
 init();
 
@@ -21,4 +22,6 @@ document.addEventListener('click', (e) => {
   }
 
   if (clickTarget(e, 'play-again-btn')) handlers.playAgain();
+
+  if (clickTarget(e, 'close-modal-btn')) closeModal();
 });
