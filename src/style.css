@@ -91,14 +91,13 @@ body {
 .place-fleet-view {
   padding-top: 3rem;
   padding-left: 3rem;
-  grid-template-rows: min-content min-content;
+  grid-template-rows: repeat(3, min-content);
   justify-items: start;
   gap: 3rem;
 }
 
 .game-view-active,
 .game-view-enemy {
-  /* padding-top: 1rem; */
   grid-template-columns: max-content max-content;
   align-items: start;
   gap: 3rem;
@@ -201,6 +200,11 @@ button {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+.place-fleet-grid-view .draggable,
+.enemy-grid span {
+  cursor: pointer;
+}
+
 /* BANNER */
 .banner {
   font-family: 'Sacramento', cursive;
@@ -223,7 +227,12 @@ button {
 /* PLACE FLEET */
 .fleet {
   display: grid;
+  grid-template-rows: repeat(5, 2.5rem);
   gap: 1rem;
+}
+
+.fleet span {
+  cursor: pointer;
 }
 
 /* SHIPS */
@@ -238,24 +247,33 @@ button {
   width: 2.5rem;
 }
 
+.grid-hole .carrier,
 .carrier span {
   background-color: #89c7bc;
 }
 
+.grid-hole .battleship,
 .battleship span {
   background-color: #a0b509;
 }
 
+.grid-hole .cruiser,
 .cruiser span {
   background-color: #f7bf48;
 }
 
+.grid-hole .submarine,
 .submarine span {
   background-color: #f6bebd;
 }
 
+.grid-hole .destroyer,
 .destroyer span {
   background-color: #ec8212;
+}
+
+.draggable {
+  transform: translate(0, 0);
 }
 
 /* LEGEND */
