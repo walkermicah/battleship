@@ -330,6 +330,10 @@ button {
   place-content: center;
 }
 
+.close-modal-btn:hover {
+  font-size: 1.75rem;
+}
+
 /* FOOTER  */
 .footer {
   display: flex;
