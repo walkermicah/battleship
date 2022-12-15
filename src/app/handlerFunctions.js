@@ -14,6 +14,7 @@ import { restoreDisplay } from '../UI/helpers/controlOpacity';
 import changeHeaderText from '../UI/helpers/changeHeaderText';
 import init from './init';
 import getShipPlacements from '../UI/helpers/getShipPlacements';
+import { showModal } from '../UI/helpers/controlModal';
 
 export const startGame = () => {
   clearUI();
@@ -22,12 +23,16 @@ export const startGame = () => {
 };
 
 export const placeFleet = () => {
-  const humanShipCoords = getShipPlacements();
-  state.humanPlayer.positionShips(humanShipCoords);
-  state.computerPlayer.positionShips();
-  clearUI();
-  gameView();
-  renderShips(humanShipCoords);
+  try {
+    const humanShipCoords = getShipPlacements();
+    state.humanPlayer.positionShips(humanShipCoords);
+    state.computerPlayer.positionShips();
+    clearUI();
+    gameView();
+    renderShips(humanShipCoords);
+  } catch (err) {
+    showModal(err.message);
+  }
 };
 
 export const compPlay = () => {
