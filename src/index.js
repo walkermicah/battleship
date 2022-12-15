@@ -8,12 +8,15 @@ const clickTarget = (e, className) =>
   e.target.classList.contains(className) ||
   e.target.parentNode.classList.contains(className);
 
+const enemyGrid = (e) =>
+  e.target.parentNode.parentNode.classList.contains('enemy-grid');
+
 document.addEventListener('click', (e) => {
   if (clickTarget(e, 'start-btn')) handlers.startGame();
 
   if (clickTarget(e, 'place-fleet-btn')) handlers.placeFleet();
 
-  if (clickTarget(e, 'grid-hole')) {
+  if (clickTarget(e, 'grid-hole') && enemyGrid(e)) {
     handlers.humanPlay(e);
   }
 
