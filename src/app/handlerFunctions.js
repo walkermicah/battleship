@@ -13,6 +13,7 @@ import checkForWinner from './helpers/checkForWinner';
 import { restoreDisplay } from '../UI/helpers/controlOpacity';
 import changeHeaderText from '../UI/helpers/changeHeaderText';
 import init from './init';
+import getShipPlacements from '../UI/helpers/getShipPlacements';
 
 export const startGame = () => {
   clearUI();
@@ -21,7 +22,8 @@ export const startGame = () => {
 };
 
 export const placeFleet = () => {
-  const humanShipCoords = placeHumanShips();
+  const humanShipCoords = getShipPlacements();
+  state.humanPlayer.positionShips(humanShipCoords);
   state.computerPlayer.positionShips();
   clearUI();
   gameView();
@@ -29,8 +31,6 @@ export const placeFleet = () => {
 };
 
 export const compPlay = () => {
-  // const target = state.computerPlayer.randomPlay();
-  // const result = state.computerPlayer.attackEnemy(state.humanPlayer, target);
   const target = state.computerPlayer.smartPlay();
   const result = state.computerPlayer.attackEnemy(
     state.humanPlayer,
