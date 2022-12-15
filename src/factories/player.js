@@ -145,12 +145,13 @@ export default function player() {
       ships[ship] = coords;
       occupiedCoords.push(...coords);
     });
-
     return ships;
   };
 
   // Place player's ships on gameboard
   const positionShips = (coords = generateCompCoords()) => {
+    board.allShipsPlaced(coords);
+    board.shipPegsAdjacent(coords);
     Object.keys(coords).forEach((ship) => {
       board.addShipToBoard(ship, coords[ship]);
     });
