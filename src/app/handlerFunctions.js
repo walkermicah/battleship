@@ -2,7 +2,6 @@ import clearUI from '../UI/helpers/clearUI';
 import placeFleetView from '../UI/views/placeFleetView';
 import gameView from '../UI/views/gameView';
 import footer from '../UI/views/components/footer';
-import { placeHumanShips } from './placeShips';
 import renderShips from '../UI/helpers/renderShips';
 import { state } from './state';
 import renderAttack from '../UI/helpers/renderAttack';
@@ -14,7 +13,7 @@ import { restoreDisplay } from '../UI/helpers/controlOpacity';
 import changeHeaderText from '../UI/helpers/changeHeaderText';
 import init from './init';
 import getShipPlacements from '../UI/helpers/getShipPlacements';
-import { showModal } from '../UI/helpers/controlModal';
+import { closeModal, showModal } from '../UI/helpers/controlModal';
 
 export const startGame = () => {
   clearUI();
@@ -68,4 +67,8 @@ export const playAgain = () => {
   restoreDisplay();
   changeHeaderText('Battleship');
   init();
+};
+
+export const closePopup = () => {
+  closeModal();
 };
