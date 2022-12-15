@@ -156,3 +156,50 @@ describe('filterOverlapCoords', () => {
     expect(result).toEqual([89]);
   });
 });
+
+describe('allShipsPlaced()', () => {
+  const placements = {
+    carrier: [35, 36, 37, 38, 39],
+    battleship: [11, 21, 31, 41],
+    cruiser: [63, 73, 83],
+    submarine: [0, 10, 20],
+    destroyer: [71, 72],
+  };
+
+  it('does not throw an error when all ships are placed', () => {
+    const result = () => testGameboard.allShipsPlaced(placements);
+    expect(result).not.toThrow();
+  });
+
+  it('throws an error when not all ship pegs are placed', () => {
+    placements.destroyer.pop();
+    const result = () => testGameboard.allShipsPlaced(placements);
+    expect(result).toThrow();
+  });
+});
+
+describe('shipPegsAdjacent()', () => {
+  it('throws an error if ship pegs are not placed in horizontally/vertically adjacent positions', () => {
+    const placements = {
+      carrier: [32, 35, 46, 47, 89],
+    };
+    const result = () => testGameboard.shipPegsAdjacent(placements);
+    expect(result).toThrow();
+  });
+
+  it('does not throw an error when ships pegs are placed in horizontally adjacent positions', () => {
+    const placements = {
+      carrier: [32, 33, 34, 35, 36],
+    };
+    const result = () => testGameboard.shipPegsAdjacent(placements);
+    expect(result).not.toThrow();
+  });
+
+  it('does not throw an error when ships pegs are placed in vertically adjacent positions', () => {
+    const placements = {
+      carrier: [32, 42, 52, 62, 72],
+    };
+    const result = () => testGameboard.shipPegsAdjacent(placements);
+    expect(result).not.toThrow();
+  });
+});

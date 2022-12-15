@@ -40,7 +40,7 @@ export default function gameboard() {
 
   const allSunk = () => fleet.every((boat) => boat.isSunk());
 
-  // Functions to filter invalid positions for computer ship placement
+  // Methods to filter invalid positions for computer ship placement
   const filterInvalidCoords = (orientation, length) => {
     const coordinates = [...Array(100).keys()];
 
@@ -80,6 +80,45 @@ export default function gameboard() {
     return availableCoords.filter((coord) => !occupied.includes(coord));
   };
 
+  // Methods to validate human ship placement
+  const allShipsPlaced = (shipPositions) => {
+    let length = 0;
+
+    Object.keys(shipPositions).forEach((coords) => {
+      length += shipPositions[coords].length;
+    });
+
+    if (length !== 17) {
+      throw new Error('Please finish placing your ships!');
+    }
+  };
+
+  const shipPegsAdjacent = (shipPositions) => {
+    Object.keys(shipPositions).forEach((coords) => {
+      const increment = shipPositions[coords][1] - shipPositions[coords][0];
+      const shipLength = shipPositions[coords].length;
+      let allAdjacent = true;
+
+      if (increment === 1) {
+        for (let i = shipLength - 1; i > 0; i--) {
+          if (shipPositions[coords][i] - shipPositions[coords][i - 1] !== 1) {
+            allAdjacent = false;
+          }
+        }
+      } else if (increment === 10) {
+        for (let i = shipLength - 1; i > 0; i--) {
+          if (shipPositions[coords][i] - shipPositions[coords][i - 1] !== 10) {
+            allAdjacent = false;
+          }
+        }
+      } else {
+        allAdjacent = false;
+      }
+
+      if (!allAdjacent) throw new Error('Please place your ships properly!');
+    });
+  };
+
   return {
     positions,
     fleet,
@@ -88,5 +127,7 @@ export default function gameboard() {
     allSunk,
     filterInvalidCoords,
     filterOverlapCoords,
+    allShipsPlaced,
+    shipPegsAdjacent,
   };
 }
