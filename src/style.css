@@ -337,9 +337,10 @@ button {
 /* FOOTER  */
 .footer {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: end;
   align-items: center;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .footer button {
@@ -347,8 +348,8 @@ button {
 }
 
 .instructions {
-  height: 3rem;
-  width: 3rem;
+  height: 3.5rem;
+  width: 3.5rem;
 }
 
 .hidden {
