@@ -89,7 +89,7 @@ export default function player() {
 
   // Attack other player's gameboard
   const attackEnemy = (enemy, target, computerPlayer = false) => {
-    if (attacks.includes(target)) return;
+    if (attacks.includes(target)) return null;
     const result = enemy.board.receiveAttack(target);
 
     if (computerPlayer) updateQueue(enemy, result, target);
