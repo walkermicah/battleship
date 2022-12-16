@@ -328,6 +328,7 @@ button {
   width: 3rem;
   display: grid;
   place-content: center;
+  transition: 0.2s;
 }
 
 .close-modal-btn:hover {
@@ -343,13 +344,15 @@ button {
   padding-bottom: 0.5rem;
 }
 
-.footer button {
-  border-style: none;
-}
-
 .instructions {
+  border-style: none;
   height: 3.5rem;
   width: 3.5rem;
+  transition: 0.2s;
+}
+
+.instructions:hover {
+  transform: scale(110%);
 }
 
 .hidden {
