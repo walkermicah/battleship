@@ -89,10 +89,10 @@ describe('attackEnemy()', () => {
     expect(result).toBe('miss');
   });
 
-  it('returns undefined if target has already been hit', () => {
+  it('returns null if target has already been hit', () => {
     activePlayer.attackEnemy(enemyPlayer, 27);
     const result = activePlayer.attackEnemy(enemyPlayer, 27);
-    expect(result).toBeUndefined();
+    expect(result).toBeNull();
   });
 });
 
@@ -196,9 +196,13 @@ describe('generateCompCoords()', () => {
 });
 
 describe('positionShips()', () => {
-  it('places ship on gameboard at correct location', () => {
+  it('places ships on gameboard at correct location', () => {
     const coords = {
-      battleship: [72],
+      carrier: [20, 30, 40, 50, 60],
+      battleship: [72, 73, 74, 75],
+      cruiser: [81, 82, 83],
+      submarine: [42, 52, 62],
+      destroyer: [98, 99],
     };
     activePlayer.positionShips(coords);
     expect(activePlayer.board.positions[72]).toHaveProperty(
