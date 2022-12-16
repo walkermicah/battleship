@@ -13,7 +13,11 @@ import { restoreDisplay } from '../UI/helpers/controlOpacity';
 import changeHeaderText from '../UI/helpers/changeHeaderText';
 import init from './init';
 import getShipPlacements from '../UI/helpers/getShipPlacements';
-import { closeModal, showModal } from '../UI/helpers/controlModal';
+import { showModal } from '../UI/helpers/controlModal';
+import {
+  placeInstructions,
+  gameInstructions,
+} from '../UI/views/components/instructions';
 
 export const startGame = () => {
   clearUI();
@@ -62,14 +66,23 @@ export const humanPlay = (e) => {
   compPlay();
 };
 
+export const showInstructions = () => {
+  const grid = document.querySelector('.grid');
+
+  if (grid.classList.contains('place-fleet-grid')) {
+    showModal(placeInstructions);
+  }
+
+  if (grid.classList.contains('active-grid')) {
+    showModal(gameInstructions);
+  }
+};
+
 export const playAgain = () => {
   clearUI();
   restoreDisplay();
   changeHeaderText('Battleship');
   init();
   placeFleetView();
-};
-
-export const closePopup = () => {
-  closeModal();
+  footer();
 };

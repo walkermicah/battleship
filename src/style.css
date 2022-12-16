@@ -305,6 +305,8 @@ button {
   position: fixed;
   top: 35%;
   left: 50%;
+  max-width: 45rem;
+  max-height: 20rem;
   transform: translateX(-50%);
   color: var(--primary-color);
   background-color: black;
@@ -313,6 +315,7 @@ button {
   font-size: 2rem;
   padding: 3rem;
   border-radius: 3px;
+  font-size: 1.75rem;
 }
 
 .close-modal-btn {

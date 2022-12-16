@@ -23,6 +23,8 @@ document.addEventListener('click', (e) => {
     handlers.humanPlay(e);
   }
 
+  if (clickTarget(e, 'instructions')) handlers.showInstructions();
+
   if (clickTarget(e, 'play-again-btn')) handlers.playAgain();
 
   if (clickTarget(e, 'close-modal-btn')) closeModal();
