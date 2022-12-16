@@ -1,7 +1,10 @@
 import './style.css';
 import init from './app/init';
+import startView from './UI/views/startView';
 import * as handlers from './app/handlerFunctions';
+import { closeModal } from './UI/helpers/controlModal';
 
+startView();
 init();
 
 const clickTarget = (e, className) =>
@@ -22,5 +25,5 @@ document.addEventListener('click', (e) => {
 
   if (clickTarget(e, 'play-again-btn')) handlers.playAgain();
 
-  if (clickTarget(e, 'close-modal-btn')) handlers.closePopup();
+  if (clickTarget(e, 'close-modal-btn')) closeModal();
 });

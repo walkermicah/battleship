@@ -67,6 +67,7 @@ export const playAgain = () => {
   restoreDisplay();
   changeHeaderText('Battleship');
   init();
+  placeFleetView();
 };
 
 export const closePopup = () => {
