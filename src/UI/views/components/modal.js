@@ -11,9 +11,9 @@ const closeBtn = () => {
   return btn;
 };
 
-export default function modal(text, html) {
+export default function modal(text) {
   const newModal = createModal();
-  text ? (newModal.textContent = text) : (newModal.innerHTML = html);
+  newModal.textContent = text;
   newModal.appendChild(closeBtn());
   return newModal;
 }
