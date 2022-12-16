@@ -1,5 +1,4 @@
 import info from '../../../assets/img/info.svg';
-import sound from '../../../assets/img/sound-on.svg';
 
 const display = document.querySelector('.display');
 
@@ -18,17 +17,7 @@ const infoBtn = () => {
   return btn;
 };
 
-const soundBtn = () => {
-  const btn = document.createElement('button');
-  btn.classList.add('sound');
-  const icon = btn.appendChild(document.createElement('img'));
-  icon.src = sound;
-  icon.alt = 'sound on/off';
-  return btn;
-};
-
 export default function footer() {
   const newFooter = createFooter();
   newFooter.appendChild(infoBtn());
-  newFooter.appendChild(soundBtn());
 }
