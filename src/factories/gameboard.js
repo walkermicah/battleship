@@ -43,6 +43,7 @@ export default function gameboard() {
   // Methods to filter invalid positions for computer ship placement
   const filterInvalidCoords = (orientation, length) => {
     const coordinates = [...Array(100).keys()];
+    let validCoords;
 
     if (orientation === 'horizontal') {
       const filteredCoords = [];
@@ -53,12 +54,15 @@ export default function gameboard() {
           )
         );
       }
-      return filteredCoords.flat();
+      validCoords = filteredCoords.flat();
     }
 
     if (orientation === 'vertical') {
-      return coordinates.filter((coord) => coord < 100 - (length - 1) * 10);
+      validCoords = coordinates.filter(
+        (coord) => coord < 100 - (length - 1) * 10
+      );
     }
+    return validCoords;
   };
 
   const filterOverlapCoords = (
