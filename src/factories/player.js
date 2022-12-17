@@ -17,9 +17,9 @@ export default function player() {
   const smartPlay = () => {
     let target;
     if (attackQueue.length > 0) {
-      const nextInQueue = attackQueue[0].at(-1);
+      const nextInQueue = attackQueue[0][attackQueue[0].length - 1];
       if (attacks.includes(nextInQueue)) attackQueue.shift();
-      target = attackQueue[0].at(-1);
+      target = attackQueue[0][attackQueue[0].length - 1];
     } else {
       target = randomPlay();
     }
