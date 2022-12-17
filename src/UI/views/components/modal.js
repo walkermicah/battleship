@@ -11,9 +11,15 @@ const closeBtn = () => {
   return btn;
 };
 
+const modalText = (text) => {
+  const p = document.createElement('p');
+  p.textContent = text;
+  return p;
+};
+
 export default function modal(text) {
   const newModal = createModal();
-  newModal.textContent = text;
   newModal.appendChild(closeBtn());
+  newModal.appendChild(modalText(text));
   return newModal;
 }
